@@ -115,7 +115,16 @@ class Annotator:
                             txt_color,
                             thickness=tf,
                             lineType=cv2.LINE_AA)
-
+                
+    def censor_box(self, box, color=(128, 128, 128)):
+        x1, y1, x2, y2 = int(box[0]), int(box[1]), int(box[2]), int(box[3])
+        if self.pil:
+            img = np.array(self.im)
+            img[y1:y2, x1:x2] = color
+            self.im = Image.fromarray(img)
+        else:  # cv2
+            self.im[y1:y2, x1:x2] = color
+            
     def masks(self, masks, colors, im_gpu, alpha=0.5, retina_masks=False):
         """Plot masks at once.
         Args:
